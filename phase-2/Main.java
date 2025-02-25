@@ -7,9 +7,10 @@ public class Main {
 
   static ContactManager contactManager = new ContactManager();
   static Console console = System.console();
+  static String fileName = "./file.txt";
 
   public static void main(String[] args) {
-    contactManager.loadContactsFromFile("file.txt");
+    contactManager.loadContactsFromFile(fileName);
     char userInput;
 
     do {
@@ -25,8 +26,6 @@ public class Main {
       performAction(userInput);
 
     } while (userInput != '0');
-
-    System.out.println(contactManager);
   }
 
   public static void performAction(char userInput) {
@@ -35,8 +34,8 @@ public class Main {
       case 'B' -> removeContact(console);
       case 'C' -> searchContacts(console);
       case 'D' -> printAllConacts(console);
-      case '0' -> System.out.println("Exiting Application");
-      default -> System.out.println("Default");
+      case '0' -> exitApplication();
+      default -> System.out.println("Not an option.");
     }
   }
 
@@ -46,13 +45,6 @@ public class Main {
 
     Contact contact = new Contact(contactName, contactNumber);
     contactManager.addContact(contact);
-
-    try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("file.txt"))) {
-      os.writeObject(contact);
-    } catch (IOException e) {
-      System.out.println("Unable to code due to exception " + e);
-    }
-
   }
 
   public static void removeContact(Console console) {
@@ -101,4 +93,8 @@ public class Main {
     console.printf("Contact are\n" + contactManager);
   }
 
+  public static void exitApplication() {
+    System.out.println("Exiting Application");
+    contactManager.saveContactsInFile(fileName);
+  }
 }
